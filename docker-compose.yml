@@ -1,0 +1,17 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: fastapi-contacts-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: contacts_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5436:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+
