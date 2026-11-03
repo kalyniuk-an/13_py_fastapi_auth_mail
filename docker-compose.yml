@@ -1,14 +1,14 @@
 services:
   postgres:
     image: postgres:16
-    container_name: fastapi-contacts-db
+    container_name: fastapi-auth-mail-db
     restart: unless-stopped
     environment:
       POSTGRES_DB: contacts_db
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
-      - "5436:5432"
+      - "5437:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 

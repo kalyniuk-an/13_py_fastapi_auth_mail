@@ -128,5 +128,48 @@ class Auth:
 
         return user
 
+    async def create_email_verification_token(
+        self,
+        email: str,
+        expires_delta: timedelta = timedelta(hours=24),
+    ) -> str:
+        now = datetime.now(timezone.utc)
+
+        payload = {
+            "sub": email,
+            "scope": "email_verification",
+            "iat": now,
+            "exp": now + expires_delta,
+        }
+
+        return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
+
+    async def decode_email_verification_token(
+        self,
+        token: str,
+    ) -> str:
+        credentials_exception = HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid or expired email verification link",
+        )
+
+        try:
+            payload = jwt.decode(
+                token,
+                SECRET_KEY,
+                algorithms=[ALGORITHM],
+            )
+
+            email = payload.get("sub")
+            scope = payload.get("scope")
+
+            if email is None or scope != "email_verification":
+                raise credentials_exception
+
+            return email
+
+        except JWTError:
+            raise credentials_exception
+
 
 auth_service = Auth()

@@ -29,3 +29,9 @@ def create_user(body: UserCreate, db: Session) -> User:
 def update_token(user: User, refresh_token: str | None, db: Session) -> None:
     user.refresh_token = refresh_token
     db.commit()
+
+
+def confirm_user_email(user: User, db: Session) -> None:
+    user.confirmed = True
+    db.commit()
+    db.refresh(user)
