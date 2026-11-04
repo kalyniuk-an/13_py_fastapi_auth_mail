@@ -7,6 +7,7 @@ from app.database import get_db
 from app.models import User
 from app.schemas import ContactCreate, ContactResponse, ContactUpdate
 from app.services.auth import auth_service
+from app.services.rate_limit import rate_limit_by_user
 
 router = APIRouter(
     prefix="/contacts",
@@ -23,6 +24,7 @@ def create_contact(
     contact: ContactCreate,
     db: Session = Depends(get_db),
     current_user: User = Depends(auth_service.get_current_user),
+    _: None = Depends(rate_limit_by_user),
 ):
     return crud.create_contact(db, contact, current_user.id)
 
