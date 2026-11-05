@@ -35,3 +35,11 @@ def confirm_user_email(user: User, db: Session) -> None:
     user.confirmed = True
     db.commit()
     db.refresh(user)
+
+
+def update_avatar(user: User, avatar_url: str, db: Session) -> User:
+    user.avatar = avatar_url
+    db.commit()
+    db.refresh(user)
+
+    return user
